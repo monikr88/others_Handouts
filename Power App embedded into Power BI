@@ -1,0 +1,122 @@
+Power Apps Embedded into Power BI Dashboard
+
+Goal: Edit Eureka's List fields from Power BI using Power App, instead of opening SharePoint List website to update the fields.
+
+
+Building a custom app based on your SharePoint list using Power Apps editor
+
+Overview of the process
+
+
+Process
+
+1. From the SharePoint List by using the options: Integrate > Power Apps > Create an app.
+
+
+
+
+2. Once you have named the app, power app editor will be opened in another tab and it will show a pre-build app with 3 screens: BrowseScreen1, DetailScreen1 and EditScreen1:
+
+
+
+In this point, for Eureka's list edition we want to use just the edit screen. Thus, we deleted BrowseScreen1 and DetailScreen1 screens. If desired, delete the screens as shown:
+
+
+
+Note: This is the desired look for Eureka' list app:
+
+
+
+3. Editing the fields:
+	- First, select the form (EditForm1) then click on Edit Fields.
+	- Second, add fields or remove the ones that were predefined using Edit fields option.
+
+
+
+Next step: connect this app to your Power BI; but before opening Power BI, some previous configurations are required.
+
+4. Click on Data sources and add a Power BI connection. Note that the previous step created the SharePoint List connection.
+
+
+
+In order to link a power app to a power BI dashboard, in the App section there should be a PowerBIIntegration element. To create this element follow next steps.
+
+
+
+5. Save the app and click on Back to return to Power App Studio home page.
+
+
+6. Open Power BI Service, web version. In order to embed a power app into a Power BI Dashboard choose the power app visual.
+ 
+ IMPORTANT: to connect an existing app with your Power BI is necessary to use Power BI service (https://app.powerbi.com/) instead of using Power BI Desktop. This implies that your dashboard must be published at least in your Workspace within the desired environment.
+
+If you use Power BI Desktop, you will create the PowerBIIntegration element but you will get an error when using the fields inside the app. In the future, this may no longer be an issue in Power BI Desktop anymore.
+
+
+
+Add the fields ID and Title into the PowerApps Data. In our case, we chose the option not to summarize data for all numerical fields.
+
+7. Click on Choose app. It will list the apps in your environment, choose the app you created above and add it.
+
+
+
+8. Follow the steps of the visual wizard and click on Go to Power Apps Studio:
+
+
+
+9. With this configuration on Power BI Service, we connect Power BI with the existing Power App and now we are able to see and use the PowerBIIntegration element:
+
+
+
+PowerBIIntegration element is required to perform the filter from Power BI to the Power App Screens.
+
+10. Perform the following changes to the EditForm1 control properties to filter the data inside the app:
+		○ Item: LookUp('Eureka LIST', ID=First([@PowerBIIntegration].Data).ID)
+
+	- TextSearchBox1:
+		○ OnChange: Set(Title, First(PowerBIIntegration.Data).Title)
+		○ Default: First(PowerBIIntegration.Data).Title
+
+For example:
+
+
+11. Publish the app:
+
+
+
+IMPORTANT: If you try to use the app within Power BI without publishing it first, the filter will not work.
+
+12. Return to Power BI WEB and filter the Power App through another visual like a Table:
+
+
+
+
+Download the .pbix in case you need the Power BI desktop version.
+
+References
+
+	- Filter a gallery control:
+		https://powerusers.microsoft.com/t5/Building-Power-Apps/How-can-we-filter-PowerBIIntegration-data/td-p/599950
+
+
+Otros:
+
+References
+
+	- HINT #1: Filter a gallery control:
+		https://powerusers.microsoft.com/t5/Building-Power-Apps/How-can-we-filter-PowerBIIntegration-data/td-p/599950
+
+	- HINT #2: Use text box OnChange action:
+	
+		You can for example use the OnChange of a Text input to set the variable:
+		https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/controls/properties-core
+		Set( nameofvariable, valueofvariable )
+		And set the DisplayMode of the Text input to View if the information is not input of a user, but simply displaying information.
+		
+		À partir de l’adresse <https://powerusers.microsoft.com/t5/Building-Power-Apps/Catch-changing-input/td-p/290494> 
+
+	- HINT #3: Publish the app:
+	
+		5. After you have completed building or making changes to your app, Save and Publish the app in PowerApps to see your app in Power BI visual.
+		
+À partir de l’adresse <https://powerapps.microsoft.com/en-us/blog/powerbi-powerapps-visual/> 
